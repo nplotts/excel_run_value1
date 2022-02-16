@@ -1,0 +1,157 @@
+
+
+
+#model for ff whiff probability
+
+set.seed(123)
+ffw_split <- initial_split(pitches_ff[,-c(1:2,10:12)], strata = whiff)
+ffw_train <- training(ffw_split)
+ffw_test <- testing(ffw_split)
+
+#model specs
+ffw_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+#model tuning grid
+ffw_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), ffw_train),
+  learn_rate(),
+  size = 30
+)
+
+#model workflow
+ffw_wf <- workflow()%>%
+  add_formula(whiff ~.)%>%
+  add_model(ffw_spec)
+
+#model folding
+set.seed(234)
+ffw_folds <- vfold_cv(ffw_train, strata = whiff)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+#model tuning
+ffw_res <- tune_grid(
+  ffw_wf,
+  resamples = ffw_folds,
+  grid = ffw_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_ff_whiff <- ffw_wf%>%
+  finalize_workflow(
+    select_best(ffw_res, "roc_auc")
+  )%>%
+  fit(ffw_train)
+  
+  #model for ff hard hit probability
+  
+set.seed(123)
+ffh_split <- initial_split(pitches_ff[,-c(1:2,9,11:12)], strata = hard_hit)
+ffh_train <- training(ffh_split)
+ffh_test <- testing(ffh_split)
+
+ffh_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+ffh_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), ffh_train),
+  learn_rate(),
+  size = 30
+)
+
+ffh_wf <- workflow()%>%
+  add_formula(hard_hit ~.)%>%
+  add_model(ffh_spec)
+
+set.seed(234)
+ffh_folds <- vfold_cv(ffh_train, strata = hard_hit)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+ffh_res <- tune_grid(
+  ffh_wf,
+  resamples = ffh_folds,
+  grid = ffh_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_ff_hh <- ffh_wf%>%
+  finalize_workflow(
+    select_best(ffh_res, "roc_auc")
+  )%>%
+  fit(ffh_train)
+  
+  #model for ff ground ball probability
+  
+  set.seed(123)
+ffg_split <- initial_split(pitches_ff[,-c(1:2,9:10,12)], strata = ground_ball)
+ffg_train <- training(ffg_split)
+ffg_test <- testing(ffg_split)
+
+ffg_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+ffg_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), ffg_train),
+  learn_rate(),
+  size = 30
+)
+
+ffg_wf <- workflow()%>%
+  add_formula(ground_ball ~.)%>%
+  add_model(ffg_spec)
+
+set.seed(234)
+ffg_folds <- vfold_cv(ffg_train, strata = ground_ball)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+ffg_res <- tune_grid(
+  ffg_wf,
+  resamples = ffg_folds,
+  grid = ffg_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_ff_gb <- ffg_wf%>%
+  finalize_workflow(
+    select_best(ffg_res, "roc_auc")
+  )%>%
+  fit(ffg_train)
