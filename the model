@@ -1,4 +1,117 @@
+#data collection
+#2020 full season pitch level data
 
+data1 = scrape_statcast_savant(start_date = "2020-07-23",
+                               end_date = "2020-08-01",
+                               player_type = "pitcher")
+
+data2 = scrape_statcast_savant(start_date = "2020-08-02",
+                               end_date = "2020-08-10",
+                               player_type = "pitcher")
+
+data3 = scrape_statcast_savant(start_date = "2020-08-11",
+                               end_date = "2020-08-19",
+                               player_type = "pitcher")
+
+data4 = scrape_statcast_savant(start_date = "2020-08-20",
+                               end_date = "2020-08-29",
+                               player_type = "pitcher")
+
+data5 = scrape_statcast_savant(start_date = "2020-08-30",
+                               end_date = "2020-09-06",
+                               player_type = "pitcher")
+
+data6 = scrape_statcast_savant(start_date = "2020-09-07",
+                               end_date = "2020-09-14",
+                               player_type = "pitcher")
+
+data7 = scrape_statcast_savant(start_date = "2020-09-15",
+                               end_date = "2020-09-22",
+                               player_type = "pitcher")
+
+data8 = scrape_statcast_savant(start_date = "2020-09-23",
+                               end_date = "2020-09-29",
+                               player_type = "pitcher")
+
+season_mlb = rbind(data1, data2, data3, data4, data5, data6, data7, data8)
+rm(data1, data2, data3, data4, data5, data6, data7, data8)
+
+#2019 full season pitch level data
+
+season12 <- scrape_statcast_savant(start_date = "2019-06-25",
+                               end_date = "2019-06-30",
+                               player_type = "pitcher")
+
+season13 <- scrape_statcast_savant(start_date = "2019-07-01",
+                               end_date = "2019-07-08",
+                               player_type = "pitcher")
+
+season14 <- scrape_statcast_savant(start_date = "2019-07-09",
+                               end_date = "2019-07-16",
+                               player_type = "pitcher")
+
+season15 <- scrape_statcast_savant(start_date = "2019-07-17",
+                               end_date = "2019-07-24",
+                               player_type = "pitcher")
+
+season16 <- scrape_statcast_savant(start_date = "2019-07-25",
+                               end_date = "2019-07-31",
+                               player_type = "pitcher")
+
+season17 <- scrape_statcast_savant(start_date = "2019-08-01",
+                               end_date = "2019-08-08",
+                               player_type = "pitcher")
+
+season18 <-  scrape_statcast_savant(start_date = "2019-08-09",
+                               end_date = "2019-08-16",
+                               player_type = "pitcher")
+
+season19 <-  scrape_statcast_savant(start_date = "2019-08-17",
+                               end_date = "2019-08-24",
+                               player_type = "pitcher")
+
+season20 <-  scrape_statcast_savant(start_date = "2019-08-25",
+                               end_date = "2019-08-31",
+                               player_type = "pitcher")
+
+season21 <-  scrape_statcast_savant(start_date = "2019-09-01",
+                               end_date = "2019-09-08",
+                               player_type = "pitcher")
+
+season21 <-  scrape_statcast_savant(start_date = "2019-09-09",
+                               end_date = "2019-09-16",
+                               player_type = "pitcher")
+
+season22 <-  scrape_statcast_savant(start_date = "2019-09-17",
+                               end_date = "2019-09-26",
+                               player_type = "pitcher")
+
+season23 <-  scrape_statcast_savant(start_date = "2019-09-27",
+                               end_date = "2019-10-01",
+                               player_type = "pitcher")
+
+season24 <-  scrape_statcast_savant(start_date = "2019-10-02",
+                               end_date = "2019-10-09",
+                               player_type = "pitcher")
+
+season2019 <- rbind(season1, season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12, season13, season14, season15, season16, season17, season18, season19, season20, season21, season22, season23, season24)
+
+season1920 <- rbind(season_mlb, season2019)
+
+#create target variables
+
+season1920 <- season1920%>%
+  mutate(whiff = ifelse(description == "swinging_strike", 1, 0),
+         ground_ball = ifelse(bb_type == "ground_ball", 1, 0),
+         hard_hit = ifelse(launch_speed >= 95, 1, 0))
+         
+#grab four-seam data
+
+pitches_ff <- season1920%>% filter(pitch_type == "FF") select(player_name, pitcher, p_throws, release_speed, release_pos_z, release_pos_x_adj, pfx_z, pfx_x_adj, whiff, hard_hit, ground_ball, delta_run_exp)%>%
+  mutate(whiff = as.factor(whiff),
+         hard_hit = as.factor(hard_hit),
+         ground_ball = as.factor(ground_ball))%>%
+  na.omit()
 
 
 #model for ff whiff probability
@@ -155,3 +268,7 @@ finalize_ff_gb <- ffg_wf%>%
     select_best(ffg_res, "roc_auc")
   )%>%
   fit(ffg_train)
+  
+  #grab sinker pitches
+  
+  
