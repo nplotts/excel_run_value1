@@ -1,0 +1,564 @@
+#start by scraping data from 2020 (train) and 2021 seasons
+library(baseballr)
+library(tidyverse)
+library(tidymodels)
+library(finetune)
+data1 = scrape_statcast_savant(start_date = "2020-07-23",
+                               end_date = "2020-08-01",
+                               player_type = "pitcher")
+
+data2 = scrape_statcast_savant(start_date = "2020-08-02",
+                               end_date = "2020-08-10",
+                               player_type = "pitcher")
+
+data3 = scrape_statcast_savant(start_date = "2020-08-11",
+                               end_date = "2020-08-19",
+                               player_type = "pitcher")
+
+data4 = scrape_statcast_savant(start_date = "2020-08-20",
+                               end_date = "2020-08-29",
+                               player_type = "pitcher")
+
+data5 = scrape_statcast_savant(start_date = "2020-08-30",
+                               end_date = "2020-09-06",
+                               player_type = "pitcher")
+
+data6 = scrape_statcast_savant(start_date = "2020-09-07",
+                               end_date = "2020-09-14",
+                               player_type = "pitcher")
+
+data7 = scrape_statcast_savant(start_date = "2020-09-15",
+                               end_date = "2020-09-22",
+                               player_type = "pitcher")
+
+data8 = scrape_statcast_savant(start_date = "2020-09-23",
+                               end_date = "2020-09-29",
+                               player_type = "pitcher")
+
+season2020 = rbind(data1, data2, data3, data4, data5, data6, data7, data8)
+rm(data1, data2, data3, data4, data5, data6, data7, data8)
+
+
+#2021 season
+
+season1 <- scrape_statcast_savant(start_date = "2021-04-01",
+                                  end_date = "2021-04-08",
+                                  player_type = "pitcher")
+season2 <- scrape_statcast_savant(start_date = "2021-04-09",
+                                  end_date = "2021-04-16",
+                                  player_type = "pitcher")
+season3 <- scrape_statcast_savant(start_date = "2021-04-17",
+                                  end_date = "2021-04-24",
+                                  player_type = "pitcher")
+season4 <- scrape_statcast_savant(start_date = "2021-04-25",
+                                  end_date = "2021-04-30",
+                                  player_type = "pitcher")
+season5 <- scrape_statcast_savant(start_date = "2021-05-01",
+                                  end_date = "2021-05-08",
+                                  player_type = "pitcher")
+season6 <- scrape_statcast_savant(start_date = "2021-05-09",
+                                  end_date = "2021-05-16",
+                                  player_type = "pitcher")
+season7 <- scrape_statcast_savant(start_date = "2021-05-17",
+                                  end_date = "2021-05-24",
+                                  player_type = "pitcher")
+season8 <- scrape_statcast_savant(start_date = "2021-05-25",
+                                  end_date = "2021-05-31",
+                                  player_type = "pitcher")
+season9 <- scrape_statcast_savant(start_date = "2021-06-01",
+                                  end_date = "2021-06-08",
+                                  player_type = "pitcher")
+season10 <- scrape_statcast_savant(start_date = "2021-06-09",
+                                   end_date = "2021-06-16",
+                                   player_type = "pitcher")
+season11 <- scrape_statcast_savant(start_date = "2021-06-17",
+                                   end_date = "2021-06-24",
+                                   player_type = "pitcher")
+season12 <- scrape_statcast_savant(start_date = "2021-06-25",
+                                   end_date = "2021-06-30",
+                                   player_type = "pitcher")
+
+season13 <- scrape_statcast_savant(start_date = "2021-07-01",
+                                   end_date = "2021-07-08",
+                                   player_type = "pitcher")
+
+season14 <- scrape_statcast_savant(start_date = "2021-07-09",
+                                   end_date = "2021-07-16",
+                                   player_type = "pitcher")
+
+season15 <- scrape_statcast_savant(start_date = "2021-07-17",
+                                   end_date = "2021-07-24",
+                                   player_type = "pitcher")
+
+season16 <- scrape_statcast_savant(start_date = "2021-07-25",
+                                   end_date = "2021-07-31",
+                                   player_type = "pitcher")
+
+season17 <- scrape_statcast_savant(start_date = "2021-08-01",
+                                   end_date = "2021-08-08",
+                                   player_type = "pitcher")
+
+season18 <-  scrape_statcast_savant(start_date = "2021-08-09",
+                                    end_date = "2021-08-16",
+                                    player_type = "pitcher")
+
+season19 <-  scrape_statcast_savant(start_date = "2021-08-17",
+                                    end_date = "2021-08-24",
+                                    player_type = "pitcher")
+
+season20 <-  scrape_statcast_savant(start_date = "2021-08-25",
+                                    end_date = "2021-08-31",
+                                    player_type = "pitcher")
+
+season21 <-  scrape_statcast_savant(start_date = "2021-09-01",
+                                    end_date = "2021-09-08",
+                                    player_type = "pitcher")
+
+season21 <-  scrape_statcast_savant(start_date = "2021-09-09",
+                                    end_date = "2021-09-16",
+                                    player_type = "pitcher")
+
+season22 <-  scrape_statcast_savant(start_date = "2021-09-17",
+                                    end_date = "2021-09-26",
+                                    player_type = "pitcher")
+
+season23 <-  scrape_statcast_savant(start_date = "2021-09-27",
+                                    end_date = "2021-10-01",
+                                    player_type = "pitcher")
+
+season24 <-  scrape_statcast_savant(start_date = "2021-10-02",
+                                    end_date = "2021-10-09",
+                                    player_type = "pitcher")
+
+season_2021 <- rbind(season1, season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12, season13, season14, season15, season16, season17, season18, season19, season20, season21, season22, season23, season24)
+rm(season1, season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12, season13, season14, season15, season16, season17, season18, season19, season20, season21, season22, season23, season24)  
+
+#create dataframe with 2020 FB movement and velo averages
+
+pitches_ff_si <- season2020%>%
+  mutate(p_throws = as.factor(p_throws))%>%
+  filter(pitch_type %in% c("FF", "SI"))%>%
+  select(pitcher, p_throws, release_speed, pfx_z, pfx_x)
+
+
+
+pitches_ff_si <- pitches_ff_si%>%
+  mutate(pfx_x = ifelse(p_throws == "R", pfx_x, -pfx_x))%>%
+  rename(pfx_x_adj = pfx_x)
+
+pitches_ff_si <- pitches_ff_si%>% group_by(pitcher)%>%
+  summarise(vel = median(release_speed),
+            fb_ivb = median(pfx_z),
+            fb_horz = median(pfx_x_adj))
+            
+            
+ #create target variables
+ 
+ season2020 <- season2020%>%
+  mutate(whiff = as.factor(ifelse(description == "swinging_strike", 1, 0)),
+         hard_hit = as.factor(ifelse(launch_speed >= 95, 1, 0)),
+         ground_ball = as.factor(ifelse(bb_type == "ground_ball", 1, 0)))%>%
+  mutate(hard_hit = ifelse(is.na(hard_hit), 0 , hard_hit),
+         ground_ball = ifelse(is.na(ground_ball),0, ground_ball))
+         
+ 
+ #grab fb data
+ 
+ pitches_fb <- season2020%>%
+  filter(pitch_type %in% c("FF", "SI")%>%
+  select(player_name, pitcher, pitch_type, p_throws, release_speed, release_pos_z,
+         release_pos_x, pfx_z, pfx_x, whiff, hard_hit, ground_ball, delta_run_exp)%>%
+  na.omit()
+  
+ pitches_fb  <- pitches_fb%>%
+  mutate(p_throws = as.factor(p_throws),
+         pfx_x = ifelse(p_throws == "R", pfx_x, -pfx_x),
+         release_pos_x = ifelse(p_throws == "R", release_pos_x, -release_pos_x))%>%
+  rename(pfx_x_adj = pfx_x,
+         release_pos_x_adj = release_pos_x) 
+ 
+ 
+ ------------
+ 
+ #grab breaking balls and join with fb averages
+ 
+ pitches_breaking_balls <- season2020%>%
+  filter(pitch_type %in% c("SL" , "CU" , "KC" , "FC"))%>%
+  select(player_name, pitcher, pitch_type, p_throws, release_speed, release_pos_z,
+         release_pos_x, pfx_z, pfx_x, whiff, hard_hit, ground_ball, delta_run_exp)%>%
+  na.omit()
+
+
+pitches_breaking_balls  <- pitches_breaking_balls%>%
+  mutate(p_throws = as.factor(p_throws),
+         pfx_x = ifelse(p_throws == "R", pfx_x, -pfx_x),
+         release_pos_x = ifelse(p_throws == "R", release_pos_x, -release_pos_x))%>%
+  rename(pfx_x_adj = pfx_x,
+         release_pos_x_adj = release_pos_x)
+
+pitches_breaking_balls <- left_join(pitches_breaking_balls, pitches_ff_si, by = "pitcher")
+
+pitches_breaking_balls <- pitches_breaking_balls%>%
+  mutate(vel_delta = vel - release_speed,
+         ivb_delta = fb_ivb - pfx_z,
+         hb_delta = fb_horz - pfx_x_adj)%>%
+  select(-fb_ivb, -fb_horz, -vel)%>%
+  na.omit()
+  
+  pitches_breaking_balls <- pitches_breaking_balls%>%
+  mutate(whiff = as.factor(whiff),
+         ground_ball = as.factor(ground_ball),
+         hard_hit = as.factor(hard_hit))
+         
+  
+  #start with expected whiff model
+  
+  set.seed(123)
+bbw_split <- initial_split(pitches_breaking_balls[,-c(1:3,11:13)], strata = whiff)
+bbw_train <- training(bbw_split)
+bbw_test <- testing(bbw_split)
+
+bbw_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+#model tuning grid
+bbw_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), bbw_train),
+  learn_rate(),
+  size = 30
+)
+
+#model workflow
+bbw_wf <- workflow()%>%
+  add_formula(whiff ~.)%>%
+  add_model(bbw_spec)
+
+#model folding
+set.seed(234)
+bbw_folds <- vfold_cv(bbw_train, strata = whiff)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+#model tuning
+bbw_res <- tune_grid(
+  bbw_wf,
+  resamples = bbw_folds,
+  grid = bbw_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_breaker_whiff <- bbw_wf%>%
+  finalize_workflow(
+    select_best(bbw_res, "roc_auc")
+  )%>%
+  fit(bbw_train)
+  
+  #now breaker expected hard hit
+  
+  set.seed(123)
+bbh_split <- initial_split(pitches_breaking_balls[,-c(1:3,10, 12:13)], strata = hard_hit)
+bbh_train <- training(bbh_split)
+bbh_test <- testing(bbh_split)
+
+bbh_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+#model tuning grid
+bbh_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), bbh_train),
+  learn_rate(),
+  size = 30
+)
+
+#model workflow
+bbh_wf <- workflow()%>%
+  add_formula(hard_hit ~.)%>%
+  add_model(bbh_spec)
+
+#model folding
+set.seed(234)
+bbh_folds <- vfold_cv(bbh_train, strata = hard_hit)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+#model tuning
+bbh_res <- tune_grid(
+  bbh_wf,
+  resamples = bbh_folds,
+  grid = bbh_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_breaker_hh<- bbh_wf%>%
+  finalize_workflow(
+    select_best(bbh_res, "roc_auc")
+  )%>%
+  fit(bbh_train)
+  
+  #breaker ground ball
+  
+  set.seed(123)
+bbg_split <- initial_split(pitches_breaking_balls[,-c(1:3,10:11,13)], strata = ground_ball)
+bbg_train <- training(bbg_split)
+bbg_test <- testing(bbg_split)
+
+bbg_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+#model tuning grid
+bbg_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), bbg_train),
+  learn_rate(),
+  size = 30
+)
+
+#model workflow
+bbg_wf <- workflow()%>%
+  add_formula(ground_ball ~.)%>%
+  add_model(bbg_spec)
+
+#model folding
+set.seed(234)
+bbg_folds <- vfold_cv(bbg_train, strata = ground_ball)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+#model tuning
+bbg_res <- tune_grid(
+  bbg_wf,
+  resamples = bbg_folds,
+  grid = bbg_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_breaker_gb<- bbg_wf%>%
+  finalize_workflow(
+    select_best(bbg_res, "roc_auc")
+  )%>%
+  fit(bbg_train)
+  
+  ##now for CH/SPL model data collection/cleaning
+  
+  pitches_change <- season2020%>% filter(pitch_type %in% c("FS", "CH"))%>%
+  select(player_name, pitcher, pitch_type, p_throws, release_speed, release_pos_z, release_pos_x, pfx_z, pfx_x, whiff, ground_ball, hard_hit, delta_run_exp)%>%
+  mutate(pfx_x = ifelse(p_throws == "R" , pfx_x, -pfx_x),
+         release_pos_x = ifelse(p_throws == "R", release_pos_x, -release_pos_x),
+         p_throws = as.factor(p_throws))%>%
+  rename(pfx_x_adj = pfx_x,
+         release_pos_x_adj = release_pos_x)%>% na.omit()
+         
+  pitches_change <- left_join(pitches_change, pitches_ff_si, by = "pitcher")%>%
+  mutate(vel_delta = vel - release_speed, 
+         ivb_delta = fb_ivb - pfx_z,
+         hb_delta = fb_horz - pfx_x_adj,
+         whiff = as.factor(whiff),
+         hard_hit = as.factor(hard_hit),
+         ground_ball = as.factor(ground_ball))%>% 
+  select(-vel, -fb_ivb, -fb_horz)%>%
+  na.omit()
+  
+  #expected whiff model
+  
+  set.seed(123)
+chw_split <- initial_split(pitches_change[,-c(1:3,11:13)], strata = whiff)
+chw_train <- training(chw_split)
+chw_test <- testing(chw_split)
+
+chw_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+#model tuning grid
+chw_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), chw_train),
+  learn_rate(),
+  size = 30
+)
+
+#model workflow
+chw_wf <- workflow()%>%
+  add_formula(whiff ~.)%>%
+  add_model(chw_spec)
+
+#model folding
+set.seed(234)
+chw_folds <- vfold_cv(chw_train, strata = whiff)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+#model tuning
+chw_res <- tune_grid(
+  chw_wf,
+  resamples = chw_folds,
+  grid = chw_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_change_whiff<- chw_wf%>%
+  finalize_workflow(
+    select_best(chw_res, "roc_auc")
+  )%>%
+  fit(chw_train)
+  
+
+#ch hard hit model
+
+set.seed(123)
+chh_split <- initial_split(pitches_change[,-c(1:3,10:11,13)], strata = hard_hit)
+chh_train <- training(chh_split)
+chh_test <- testing(chh_split)
+
+chh_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+#model tuning grid
+chh_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), chh_train),
+  learn_rate(),
+  size = 30
+)
+
+#model workflow
+chh_wf <- workflow()%>%
+  add_formula(hard_hit ~.)%>%
+  add_model(chh_spec)
+
+#model folding
+set.seed(234)
+chh_folds <- vfold_cv(chh_train, strata = hard_hit)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+#model tuning
+chh_res <- tune_grid(
+  chh_wf,
+  resamples = chh_folds,
+  grid = chh_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_change_hh<- chh_wf%>%
+  finalize_workflow(
+    select_best(chh_res, "roc_auc")
+  )%>%
+  fit(chh_train)
+  
+ 
+ #ch ground ball model
+ 
+ set.seed(123)
+chg_split <- initial_split(pitches_change[,-c(1:3,10,12:13)], strata = ground_ball)
+chg_train <- training(chg_split)
+chg_test <- testing(chg_split)
+
+chg_spec <- boost_tree(
+  trees = tune(),
+  mtry = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  sample_size = tune(),
+  learn_rate = tune(),)%>%
+  set_engine("xgboost")%>%
+  set_mode("classification")
+
+#model tuning grid
+chg_grid <- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  sample_size = sample_prop(),
+  finalize(mtry(), chg_train),
+  learn_rate(),
+  size = 30
+)
+
+#model workflow
+chg_wf <- workflow()%>%
+  add_formula(ground_ball ~.)%>%
+  add_model(chg_spec)
+
+#model folding
+set.seed(234)
+chg_folds <- vfold_cv(chg_train, strata = ground_ball)
+
+doParallel::registerDoParallel()
+set.seed(456)
+
+#model tuning
+chg_res <- tune_grid(
+  chg_wf,
+  resamples = chg_folds,
+  grid = chg_grid,
+  control = control_grid(save_pred = T)
+)
+
+finalize_change_gb<- chg_wf%>%
+  finalize_workflow(
+    select_best(chg_res, "roc_auc")
+  )%>%
+  fit(chg_train)
+  
+  
+  
+ 
+ 
+
