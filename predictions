@@ -1,0 +1,275 @@
+library(tidymodels)
+library(finetune)
+library(tidyverse)
+library(baseballr)
+
+#read in models
+
+fb_whiff <- readRDS("fb_whiff_model.rds")
+fb_gb <- readRDS("fb_gb_model.rds")
+fb_hh <- readRDS("fb_hh_model.rds")
+
+bb_whiff <- readRDS("bb_whiff_model.rds")
+bb_gb <- readRDS("bb_gb_model.rds")
+bb_hh <- readRDS("bb_hh_model.rds")
+
+ch_whiff <- readRDS("ch_whiff_model.rds")
+ch_gb <- readRDS("ch_gb_model.rds")
+ch_hh<- readRDS("ch_hh_model.rds")
+
+
+#load in 2021 data
+season1 <- scrape_statcast_savant(start_date = "2021-04-01",
+                                  end_date = "2021-04-08",
+                                  player_type = "pitcher")
+season2 <- scrape_statcast_savant(start_date = "2021-04-09",
+                                  end_date = "2021-04-16",
+                                  player_type = "pitcher")
+season3 <- scrape_statcast_savant(start_date = "2021-04-17",
+                                  end_date = "2021-04-24",
+                                  player_type = "pitcher")
+season4 <- scrape_statcast_savant(start_date = "2021-04-25",
+                                  end_date = "2021-04-30",
+                                  player_type = "pitcher")
+season5 <- scrape_statcast_savant(start_date = "2021-05-01",
+                                  end_date = "2021-05-08",
+                                  player_type = "pitcher")
+season6 <- scrape_statcast_savant(start_date = "2021-05-09",
+                                  end_date = "2021-05-16",
+                                  player_type = "pitcher")
+season7 <- scrape_statcast_savant(start_date = "2021-05-17",
+                                  end_date = "2021-05-24",
+                                  player_type = "pitcher")
+season8 <- scrape_statcast_savant(start_date = "2021-05-25",
+                                  end_date = "2021-05-31",
+                                  player_type = "pitcher")
+season9 <- scrape_statcast_savant(start_date = "2021-06-01",
+                                  end_date = "2021-06-08",
+                                  player_type = "pitcher")
+season10 <- scrape_statcast_savant(start_date = "2021-06-09",
+                                   end_date = "2021-06-16",
+                                   player_type = "pitcher")
+season11 <- scrape_statcast_savant(start_date = "2021-06-17",
+                                   end_date = "2021-06-24",
+                                   player_type = "pitcher")
+season12 <- scrape_statcast_savant(start_date = "2021-06-25",
+                                   end_date = "2021-06-30",
+                                   player_type = "pitcher")
+
+season13 <- scrape_statcast_savant(start_date = "2021-07-01",
+                                   end_date = "2021-07-08",
+                                   player_type = "pitcher")
+
+season14 <- scrape_statcast_savant(start_date = "2021-07-09",
+                                   end_date = "2021-07-16",
+                                   player_type = "pitcher")
+
+season15 <- scrape_statcast_savant(start_date = "2021-07-17",
+                                   end_date = "2021-07-24",
+                                   player_type = "pitcher")
+
+season16 <- scrape_statcast_savant(start_date = "2021-07-25",
+                                   end_date = "2021-07-31",
+                                   player_type = "pitcher")
+
+season17 <- scrape_statcast_savant(start_date = "2021-08-01",
+                                   end_date = "2021-08-08",
+                                   player_type = "pitcher")
+
+season18 <-  scrape_statcast_savant(start_date = "2021-08-09",
+                                    end_date = "2021-08-16",
+                                    player_type = "pitcher")
+
+season19 <-  scrape_statcast_savant(start_date = "2021-08-17",
+                                    end_date = "2021-08-24",
+                                    player_type = "pitcher")
+
+season20 <-  scrape_statcast_savant(start_date = "2021-08-25",
+                                    end_date = "2021-08-31",
+                                    player_type = "pitcher")
+
+season21 <-  scrape_statcast_savant(start_date = "2021-09-01",
+                                    end_date = "2021-09-08",
+                                    player_type = "pitcher")
+
+season21 <-  scrape_statcast_savant(start_date = "2021-09-09",
+                                    end_date = "2021-09-16",
+                                    player_type = "pitcher")
+
+season22 <-  scrape_statcast_savant(start_date = "2021-09-17",
+                                    end_date = "2021-09-26",
+                                    player_type = "pitcher")
+
+season23 <-  scrape_statcast_savant(start_date = "2021-09-27",
+                                    end_date = "2021-10-01",
+                                    player_type = "pitcher")
+
+season24 <-  scrape_statcast_savant(start_date = "2021-10-02",
+                                    end_date = "2021-10-09",
+                                    player_type = "pitcher")
+
+season_2021 <- rbind(season1, season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12, season13, season14, season15, season16, season17, season18, season19, season20, season21, season22, season23, season24)
+rm(season1, season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12, season13, season14, season15, season16, season17, season18, season19, season20, season21, season22, season23, season24) 
+
+
+#target variables and fb data grab
+
+season_2021 <- season_2021%>%
+  mutate(whiff = as.factor(ifelse(description == "swinging_strike", 1, 0)),
+         hard_hit = as.factor(ifelse(launch_speed >= 95, 1, 0)),
+         ground_ball = as.factor(ifelse(bb_type == "ground_ball", 1, 0)))%>%
+  mutate(hard_hit = ifelse(is.na(hard_hit), 0 , hard_hit),
+         ground_ball = ifelse(is.na(ground_ball),0, ground_ball))
+
+pitches_fb <- season_2021%>%
+  filter(pitch_type %in% c("FF", "SI"))%>%
+  select(player_name, pitcher, pitch_type, p_throws, release_speed, release_pos_z, release_pos_x, pfx_z, pfx_x, whiff, hard_hit, ground_ball)%>%
+  mutate(release_pos_x = ifelse(p_throws == "R", release_pos_x, -release_pos_x),
+         pfx_x = ifelse(p_throws == "R", pfx_x, -pfx_x),
+         p_throws = as.factor(p_throws),
+         whiff = as.factor(whiff),
+         hard_hit = as.factor(hard_hit),
+         ground_ball = as.factor(ground_ball))%>%
+  rename(release_pos_x_adj = release_pos_x,
+         pfx_x_adj = pfx_x)%>% na.omit()
+
+
+#run fb models
+
+pred_fb_whiff <- predict(fb_whiff, pitches_fb[,-c(1:3,11:12)], type = "prob")
+pred_fb_hh <- predict(fb_hh, pitches_fb[,-c(1:3,10,12)], type = "prob")
+pred_fb_gb <- predict(fb_gb, pitches_fb[,-c(1:3,10:11)], type = "prob")
+
+pitches_fb <- pitches_fb%>%
+  mutate(whiff_prob = pred_fb_whiff[,-1],
+         hh_prob = pred_fb_hh[,-1],
+         gb_prob = pred_fb_gb[,-1],
+         xrv = (whiff_prob * -.12) + (hh_prob * .255) + (gb_prob * -.07),
+         stuff_plus = scale(-xrv) * 20 +100)
+
+fb_players <- pitches_fb%>%
+  group_by(player_name, pitch_type)%>%
+  summarise(Pitches = n(),
+            Velo = median(release_speed),
+            IVB = median(pfx_z) * 12,
+            HB = median(pfx_x_adj) * 12,
+            RelZ = median(release_pos_z),
+            RelX = median(release_pos_x_adj),
+            Stuff_Plus = median(stuff_plus))
+
+
+#breaking ball data collection
+
+pitches_ff_si <- season_2021%>%
+  mutate(p_throws = as.factor(p_throws))%>%
+  filter(pitch_type %in% c("FF", "SI"))%>%
+  select(pitcher, p_throws, release_speed, pfx_z, pfx_x)
+
+
+
+pitches_ff_si <- pitches_ff_si%>%
+  mutate(pfx_x = ifelse(p_throws == "R", pfx_x, -pfx_x))%>%
+  rename(pfx_x_adj = pfx_x)
+
+pitches_ff_si <- pitches_ff_si%>% group_by(pitcher)%>%
+  summarise(vel = median(release_speed),
+            fb_ivb = median(pfx_z),
+            fb_horz = median(pfx_x_adj))
+            
+pitches_breakers <- season_2021%>%
+  filter(pitch_type %in% c("KC" , "CU" , "SL" , "FC"))%>%
+  select(player_name, pitcher, pitch_type, p_throws, release_speed, release_pos_z, release_pos_x, pfx_z, pfx_x, whiff, hard_hit, ground_ball)%>%
+  mutate(release_pos_x = ifelse(p_throws == "R", release_pos_x, -release_pos_x),
+         pfx_x = ifelse(p_throws == "R", pfx_x, -pfx_x),
+         p_throws = as.factor(p_throws),
+         whiff = as.factor(whiff),
+         hard_hit = as.factor(hard_hit),
+         ground_ball = as.factor(ground_ball))%>%
+  rename(release_pos_x_adj = release_pos_x,
+         pfx_x_adj = pfx_x)%>% na.omit()
+         
+pitches_breakers <- left_join(pitches_breakers, pitches_ff_si, by = "pitcher")
+
+pitches_breakers <- pitches_breakers%>%
+  mutate(vel_delta = vel - release_speed,
+         ivb_delta = fb_ivb - pfx_z,
+         hb_delta = fb_horz - pfx_x_adj,
+         p_throws = as.factor(p_throws))%>%
+  select(-fb_ivb, -fb_horz, -vel)%>%
+  na.omit()
+  
+  #run models
+  
+pred_bb_whiff <- predict(bb_whiff, pitches_breakers[,-c(1:3,11:12)], type = "prob")
+pred_bb_hh <- predict(bb_hh, pitches_breakers[,-c(1:3,10,12)], type = "prob")
+pred_bb_gb <- predict(bb_gb, pitches_breakers[,-c(1:3,10:11)], type = "prob")
+
+pitches_breakers <- pitches_breakers%>%
+  mutate(whiff_prob = pred_bb_whiff[,-1],
+         hh_prob = pred_bb_hh[,-1],
+         gb_prob = pred_bb_gb[,-1],
+         xrv = (whiff_prob * -.12) + (hh_prob * .255) + (gb_prob * -.07),
+         stuff_plus = scale(-xrv) * 20 +100)
+
+bb_players <- pitches_breakers%>%
+  group_by(player_name, pitch_type)%>%
+  summarise(Pitches = n(),
+            Velo = median(release_speed),
+            IVB = median(pfx_z) * 12,
+            HB = median(pfx_x_adj) * 12,
+            RelZ = median(release_pos_z),
+            RelX = median(release_pos_x_adj),
+            Stuff_Plus = median(stuff_plus))
+            
+            
+  #grab ch data
+  
+  pitches_ch <- season_2021%>%
+  filter(pitch_type %in% c("CH" , "FS"))%>%
+  select(player_name, pitcher, pitch_type, p_throws, release_speed, release_pos_z, release_pos_x, pfx_z, pfx_x, whiff, hard_hit, ground_ball)%>%
+  mutate(release_pos_x = ifelse(p_throws == "R", release_pos_x, -release_pos_x),
+         pfx_x = ifelse(p_throws == "R", pfx_x, -pfx_x),
+         p_throws = as.factor(p_throws),
+         whiff = as.factor(whiff),
+         hard_hit = as.factor(hard_hit),
+         ground_ball = as.factor(ground_ball))%>%
+  rename(release_pos_x_adj = release_pos_x,
+         pfx_x_adj = pfx_x)%>% na.omit()
+
+pitches_ch <- left_join(pitches_ch, pitches_ff_si, by = "pitcher")
+
+pitches_ch <- pitches_ch%>%
+  mutate(vel_delta = vel - release_speed,
+         ivb_delta = fb_ivb - pfx_z,
+         hb_delta = fb_horz - pfx_x_adj,
+         p_throws = as.factor(p_throws))%>%
+  select(-fb_ivb, -fb_horz, -vel)%>%
+  na.omit()
+
+
+#run ch models
+
+pred_ch_whiff <- predict(ch_whiff, pitches_ch[,-c(1:3,11:12)], type = "prob")
+pred_ch_hh <- predict(ch_hh, pitches_ch[,-c(1:3,10,12)], type = "prob")
+pred_ch_gb <- predict(ch_gb, pitches_ch[,-c(1:3,10:11)], type = "prob")
+
+pitches_ch <- pitches_ch%>%
+  mutate(whiff_prob = pred_ch_whiff[,-1],
+         hh_prob = pred_ch_hh[,-1],
+         gb_prob = pred_ch_gb[,-1],
+         xrv = (whiff_prob * -.12) + (hh_prob * .255) + (gb_prob * -.07),
+         stuff_plus = scale(-xrv) * 20 +100)
+
+ch_players <- pitches_ch%>%
+  group_by(player_name, pitch_type)%>%
+  summarise(Pitches = n(),
+            Velo = median(release_speed),
+            IVB = median(pfx_z) * 12,
+            HB = median(pfx_x_adj) * 12,
+            RelZ = median(release_pos_z),
+            RelX = median(release_pos_x_adj),
+            Stuff_Plus = median(stuff_plus))
+            
+ #create individual pitch type stuff plus data frame
+ 
+ final_mlb_stuff <- rbind(fb_players, bb_players, ch_players)
