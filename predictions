@@ -136,9 +136,9 @@ pitches_fb <- season_2021%>%
 
 #run fb models
 
-pred_fb_whiff <- predict(fb_whiff, pitches_fb[,-c(1:3,11:12)], type = "prob")
-pred_fb_hh <- predict(fb_hh, pitches_fb[,-c(1:3,10,12)], type = "prob")
-pred_fb_gb <- predict(fb_gb, pitches_fb[,-c(1:3,10:11)], type = "prob")
+pred_fb_whiff <- predict(fb_whiff, pitches_fb[,-c(1:3,10:12)], type = "prob")
+pred_fb_hh <- predict(fb_hh, pitches_fb[,-c(1:3,10:12)], type = "prob")
+pred_fb_gb <- predict(fb_gb, pitches_fb[,-c(1:3,10:12)], type = "prob")
 
 pitches_fb <- pitches_fb%>%
   mutate(whiff_prob = pred_fb_whiff[,-1],
@@ -200,9 +200,9 @@ pitches_breakers <- pitches_breakers%>%
   
   #run models
   
-pred_bb_whiff <- predict(bb_whiff, pitches_breakers[,-c(1:3,11:12)], type = "prob")
-pred_bb_hh <- predict(bb_hh, pitches_breakers[,-c(1:3,10,12)], type = "prob")
-pred_bb_gb <- predict(bb_gb, pitches_breakers[,-c(1:3,10:11)], type = "prob")
+pred_bb_whiff <- predict(bb_whiff, pitches_breakers[,-c(1:3,10:12)], type = "prob")
+pred_bb_hh <- predict(bb_hh, pitches_breakers[,-c(1:3,10:12)], type = "prob")
+pred_bb_gb <- predict(bb_gb, pitches_breakers[,-c(1:3,10:12)], type = "prob")
 
 pitches_breakers <- pitches_breakers%>%
   mutate(whiff_prob = pred_bb_whiff[,-1],
@@ -249,9 +249,9 @@ pitches_ch <- pitches_ch%>%
 
 #run ch models
 
-pred_ch_whiff <- predict(ch_whiff, pitches_ch[,-c(1:3,11:12)], type = "prob")
-pred_ch_hh <- predict(ch_hh, pitches_ch[,-c(1:3,10,12)], type = "prob")
-pred_ch_gb <- predict(ch_gb, pitches_ch[,-c(1:3,10:11)], type = "prob")
+pred_ch_whiff <- predict(ch_whiff, pitches_ch[,-c(1:3,10:12)], type = "prob")
+pred_ch_hh <- predict(ch_hh, pitches_ch[,-c(1:3,10:12)], type = "prob")
+pred_ch_gb <- predict(ch_gb, pitches_ch[,-c(1:3,10:12)], type = "prob")
 
 pitches_ch <- pitches_ch%>%
   mutate(whiff_prob = pred_ch_whiff[,-1],
